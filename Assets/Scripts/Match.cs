@@ -5,13 +5,24 @@ using UnityEngine.UI;
 
 public class Match : MonoBehaviour
 {
-    const float INITIAL_TIME = 100;  // match time in seconds
+    const float INITIAL_TIME = 60;  // match time in seconds
     const float INITIAL_TIME_FREZE = 6f;  // freeze time in seconds
-    
+
+    public Player bluePlayer;
+    public Player redPlayer;
+
+    public Text bluePlayerScoreText;
+    public Text redPlayerScoreText;
+
     public Text countdownText;
+
     public GameObject gameOverCanvas;
+    public Text gameOverText;
+
     public GameObject prematchCanvas;
     public Text prematchText;
+
+    public GameObject notBirp;
 
     private float timeLeft = 0f;
     private int timeLeftToShow = 0;
@@ -30,6 +41,8 @@ public class Match : MonoBehaviour
         {
             timeLeft -= Time.deltaTime;
             countdownText.text = ((int)timeLeft).ToString();
+            bluePlayerScoreText.text = bluePlayer.score.ToString();
+            redPlayerScoreText.text = redPlayer.score.ToString();
         }
         else {
             GameOver();
@@ -59,6 +72,16 @@ public class Match : MonoBehaviour
     void GameOver() 
     {
         gameOverCanvas.SetActive(true);
+        if (bluePlayer.score > redPlayer.score)
+            gameOverText.text = "Blue Player Won!";
+        else if (redPlayer.score > bluePlayer.score)
+            gameOverText.text = "Red Player Won!";
+        else
+        {
+            gameOverText.text = "Tie!!";
+            notBirp.SetActive(true);
+        }
+
         Time.timeScale = 0f;
     }
 

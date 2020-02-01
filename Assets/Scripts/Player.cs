@@ -5,18 +5,20 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))][RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour {
 
-    enum WhichPlayer { Red, Blue }
+    public int score;
 
-    [SerializeField] private WhichPlayer whichPlayer;
+    public enum WhichPlayer { Red, Blue }
+
+    [SerializeField] public WhichPlayer whichPlayer;
 
     [SerializeField]
     private float moveSpeed = 25f,
-                  jumpSpeed = 25f,
+                  jumpSpeed = 100f,
 
-        jumpIntensity = 270f,
-                            baseJumpDuration = 0.15f, resizeRate = 2.75f,
+        jumpIntensity = 300f,
+                            baseJumpDuration = 0.4f, resizeRate = 2f,
                             minScale = 1f,
-                            maxScale = 4.5f, currentScale = 2f;
+                            maxScale = 4f, currentScale = 1f;
     
 
     private Rigidbody2D r2d;
@@ -34,8 +36,6 @@ public class Player : MonoBehaviour {
     public bool isJumpAllowed { get { return /*TutorialElement.isJumpAllowed*/ true; } }
 
     private Collider2D[] touchCheckBuffer = new Collider2D[5]; // Needed to do non-alloc collision detection (more memory-efficient)
-
-    private int score;
 
     private bool touchesFloor {
         get {
@@ -125,12 +125,14 @@ public class Player : MonoBehaviour {
     void Update () {
         if (controlsEnabled) {
             if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
-                ouHeld.Throw(new Vector2(-15f, 15f));
-                ouHeld = null;
+                ouHeld = ouHeld.Throw(new Vector2(2f*r2d.velocity.x, 15f));
             }
 
             if (Input.GetButtonDown(whichPlayer + "Hatch") && nearNest) {
                 // TODO Animația de clocire
+                if(ouHeld != null) {
+                    ouHeld.transform.localPosition = new Vector3(0f, -0.8f, 0f);
+                }
             }
         }
 
@@ -147,14 +149,17 @@ public class Player : MonoBehaviour {
     }
 
     void OnTriggerEnter2D (Collider2D other) {
-        if (other.gameObject.layer == ouLayer) {
-            (ouHeld = other.GetComponent<Ou>()).GrabHold(transform);
+        if (ouHeld== null && other.gameObject.layer == ouLayer) {
+            ouHeld = other.GetComponent<Ou>().GrabHold(transform);
         }
 
         else if (other.gameObject.layer == nestLayer) {
             nearNest = true;
             if (ouHeld != null) {
-                ouHeld.PutInNest(other.transform);
+                ouHeld=ouHeld.PutInNest(other.transform);
+                if (ouHeld==null) {
+                    score++;
+                }
             }
         }
     }
