@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Ou : MonoBehaviour {
 
+    private const float maxSlideInTime = 3f;
+
     private Rigidbody2D r2d;
     private int wallsLayer;
     private bool isHeld;
@@ -24,6 +26,21 @@ public class Ou : MonoBehaviour {
             print("Egg be dead");
             r2d.bodyType = RigidbodyType2D.Static;
         }
+    }
+
+    internal void SlideIn(Vector3 leftmost, Vector3 rightmost) {
+        float rnd = Random.value;
+        transform.position = rightmost;
+        StartCoroutine(SlideInCoroutine(rightmost,Vector3.Lerp(rightmost, leftmost, rnd), maxSlideInTime*rnd));
+    }
+
+    private IEnumerator SlideInCoroutine (Vector3 start, Vector3 end, float time) {
+        
+        for (float t=0f; t< time; t += Time.deltaTime) {
+            transform.position = Vector3.Lerp(start, end, Mathf.SmoothStep(0f, 1f, t / time));
+            yield return new WaitForEndOfFrame();
+        }
+        r2d.bodyType = RigidbodyType2D.Dynamic;
     }
 
     internal bool GrabHold(Transform holder) {
