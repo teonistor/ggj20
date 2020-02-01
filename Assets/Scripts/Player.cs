@@ -5,21 +5,28 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))][RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour {
 
+    enum WhichPlayer { Red, Blue }
+
+    [SerializeField] private WhichPlayer whichPlayer;
+
     [SerializeField]
-    private float moveSpeed = 60f, jumpIntensity = 270f,
+    private float moveSpeed = 25f,
+                  jumpSpeed = 25f,
+
+
+        jumpIntensity = 270f,
                             baseJumpDuration = 0.15f, resizeRate = 2.75f,
                             minScale = 1f,
                             maxScale = 4.5f, currentScale = 2f;
     [SerializeField] private LayerMask wallsLayer;
-
-    private Vector3 baseScale;
+    
 
     private Rigidbody2D r2d;
     private float jumpDurationRemaining;
     private bool controlsEnabled = true;
 
-    [SerializeField] private AudioClip bounce, fall, burn, inflate, levelUp, collect;
-    private new AudioSource audio;
+    //[SerializeField] private AudioClip bounce, fall, burn, inflate, levelUp, collect;
+    //private new AudioSource audio;
 
     public bool isJumpAllowed { get { return /*TutorialElement.isJumpAllowed*/ true; } }
 
@@ -28,6 +35,7 @@ public class Player : MonoBehaviour {
         get {
             Vector3 floorPoint = transform.position;
             floorPoint.y -= transform.localScale.y * 0.5f;
+            print(whichPlayer + " floor point " + floorPoint);
             return Physics2D.OverlapCircleNonAlloc(floorPoint, 0.2f, touchCheckBuffer, wallsLayer) > 0;
         }
     }
@@ -43,34 +51,38 @@ public class Player : MonoBehaviour {
     public float minY { get { return -60f; } }
 
     void Start () {
-        baseScale = transform.localScale / currentScale;
         r2d = GetComponent<Rigidbody2D>();
-        audio = GetComponent<AudioSource>();
+        //audio = GetComponent<AudioSource>();
     }
 
     void FixedUpdate () {
         if (controlsEnabled) {
             // Horizontal movement
-            r2d.AddForce(new Vector2(Input.GetAxis("Horizontal1") * moveSpeed, 0f));
-            //r2d.velocity = new Vector2(Input.GetAxis("Move") * 4f, 0f) ; // An adaptation of this could be used instead, especially if we go for tilted ramps 
+            //r2d.AddForce(new Vector2(Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed, 0f));
+            Vector2 velo = r2d.velocity;
+            velo.x = Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed;
+            
 
             // Vertical movement
             if (touchesCeiling) {
                 // Empty jump "fuel" when hitting ceiling
                 jumpDurationRemaining = 0f;
+                print(whichPlayer + " touches ceiling");
             }
-            else if (isJumpAllowed && Input.GetButton("Jump")) {
+            else if (isJumpAllowed && Input.GetButton(whichPlayer + "Jump")) {
+                print(whichPlayer + " jump " + jumpDurationRemaining);
                 // Mid-jump or jump starting now: add vertical force while there still is jump "fuel"
                 if (jumpDurationRemaining > 0f) {
                     jumpDurationRemaining -= Time.fixedDeltaTime;
-                    r2d.AddForce(new Vector2(0f, jumpIntensity));
+                    //r2d.AddForce(new Vector2(0f, jumpIntensity));
+                    velo.y = jumpSpeed;
                     jumpIntensity *= 0.98f;
 
                     // Perform bounce sound when leaving floor
-                    if (touchesFloor && !audio.isPlaying) {
-                        audio.clip = bounce;
-                        audio.Play();
-                    }
+                    //if (touchesFloor && !audio.isPlaying) {
+                    //    audio.clip = bounce;
+                    //    audio.Play();
+                    //}
                 }
             }
             else if (touchesFloor) {
@@ -82,6 +94,8 @@ public class Player : MonoBehaviour {
                 // Empty jump "fuel" when in the air and no longer jumping
                 jumpDurationRemaining = 0f;
             }
+
+            r2d.velocity = velo;
 
             // Die if fallen off-screen
             //if (transform.position.y < minY) {
@@ -99,33 +113,11 @@ public class Player : MonoBehaviour {
 
     void Update () {
         if (controlsEnabled) {
-            // Inflate / deflate
-            //if (Pump.isActive) {
-            //    if (Input.GetButton("Inflate")) {
-            //        currentScale *= Mathf.Pow(resizeRate, Time.deltaTime);
-            //        currentScale = Mathf.Min(currentScale, maxScale);
-            //        transform.localScale = baseScale * currentScale;
-
-            //        if (!audio.isPlaying) {
-            //            audio.clip = inflate;
-            //            audio.Play();
-            //        }
-            //    }
-            //    else if (Input.GetButton("Deflate")) {
-            //        currentScale /= Mathf.Pow(resizeRate, Time.deltaTime);
-            //        currentScale = Mathf.Max(currentScale, minScale);
-            //        transform.localScale = baseScale * currentScale;
-
-            //        if (!audio.isPlaying) {
-            //            audio.clip = inflate;
-            //            audio.Play();
-            //        }
-            //    }
-            //}
+    
         }
 
         // Handle pause
-        if (Input.GetButtonDown("Pause")) {
+        if (Input.GetButtonDown("Cancel")) {
             //if (controlsEnabled) {
             //    freeze();
             //    Universe.TogglePause(() => defrost());
@@ -137,8 +129,8 @@ public class Player : MonoBehaviour {
     }
 
     internal void itemCollected () {
-        audio.clip = collect;
-        audio.Play();
+        //audio.clip = collect;
+        //audio.Play();
     }
 
     public void freeze () {
