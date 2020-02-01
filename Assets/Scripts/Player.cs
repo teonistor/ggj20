@@ -22,6 +22,7 @@ public class Player : MonoBehaviour {
     private Rigidbody2D r2d;
     private LayerMask wallsLayer;
     private int ouLayer;
+    private Ou ouHeld;
     private float jumpDurationRemaining;
     private bool controlsEnabled = true;
 
@@ -54,6 +55,7 @@ public class Player : MonoBehaviour {
         r2d = GetComponent<Rigidbody2D>();
         wallsLayer = LayerMask.GetMask("Walls");
         ouLayer = LayerMask.NameToLayer("Ou");
+        ouHeld = null;
         //audio = GetComponent<AudioSource>();
     }
 
@@ -115,7 +117,10 @@ public class Player : MonoBehaviour {
 
     void Update () {
         if (controlsEnabled) {
-    
+            if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
+                ouHeld.Throw(new Vector2(-15f, 15f));
+                ouHeld = null;
+            }
         }
 
         // Handle pause
@@ -131,7 +136,7 @@ public class Player : MonoBehaviour {
     }
     void OnTriggerEnter2D (Collider2D other) {
         if (other.gameObject.layer == ouLayer) {
-            other.GetComponent<Ou>().grabHold(transform);
+            (ouHeld = other.GetComponent<Ou>()).GrabHold(transform);
         }
     }
 

@@ -26,12 +26,23 @@ public class Ou : MonoBehaviour {
         }
     }
 
-    internal bool grabHold(Transform holder) {
+    internal bool GrabHold(Transform holder) {
         if (!isHeld) {
             isHeld = true;
             r2d.bodyType = RigidbodyType2D.Kinematic;
             transform.parent = holder;
             transform.localPosition = new Vector3(1f, 1f, 0f);
+            return true;
+        }
+        return false;
+    }
+
+    internal bool Throw(Vector2 velo) {
+        if (isHeld) {
+            isHeld = false;
+            transform.parent = null;
+            r2d.bodyType = RigidbodyType2D.Dynamic;
+            r2d.velocity = velo;
             return true;
         }
         return false;
