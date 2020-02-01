@@ -13,15 +13,15 @@ public class Player : MonoBehaviour {
     private float moveSpeed = 25f,
                   jumpSpeed = 25f,
 
-
         jumpIntensity = 270f,
                             baseJumpDuration = 0.15f, resizeRate = 2.75f,
                             minScale = 1f,
                             maxScale = 4.5f, currentScale = 2f;
-    [SerializeField] private LayerMask wallsLayer;
     
 
     private Rigidbody2D r2d;
+    private LayerMask wallsLayer;
+    private int ouLayer;
     private float jumpDurationRemaining;
     private bool controlsEnabled = true;
 
@@ -35,7 +35,7 @@ public class Player : MonoBehaviour {
         get {
             Vector3 floorPoint = transform.position;
             floorPoint.y -= transform.localScale.y * 0.5f;
-            print(whichPlayer + " floor point " + floorPoint);
+            //print(whichPlayer + " floor point " + floorPoint);
             return Physics2D.OverlapCircleNonAlloc(floorPoint, 0.2f, touchCheckBuffer, wallsLayer) > 0;
         }
     }
@@ -52,6 +52,8 @@ public class Player : MonoBehaviour {
 
     void Start () {
         r2d = GetComponent<Rigidbody2D>();
+        wallsLayer = LayerMask.GetMask("Walls");
+        ouLayer = LayerMask.NameToLayer("Ou");
         //audio = GetComponent<AudioSource>();
     }
 
@@ -67,10 +69,10 @@ public class Player : MonoBehaviour {
             if (touchesCeiling) {
                 // Empty jump "fuel" when hitting ceiling
                 jumpDurationRemaining = 0f;
-                print(whichPlayer + " touches ceiling");
+                //print(whichPlayer + " touches ceiling");
             }
             else if (isJumpAllowed && Input.GetButton(whichPlayer + "Jump")) {
-                print(whichPlayer + " jump " + jumpDurationRemaining);
+                //print(whichPlayer + " jump " + jumpDurationRemaining);
                 // Mid-jump or jump starting now: add vertical force while there still is jump "fuel"
                 if (jumpDurationRemaining > 0f) {
                     jumpDurationRemaining -= Time.fixedDeltaTime;
@@ -125,6 +127,11 @@ public class Player : MonoBehaviour {
             //else {
             //    Universe.TogglePause();
             //}
+        }
+    }
+    void OnTriggerEnter2D (Collider2D other) {
+        if (other.gameObject.layer == ouLayer) {
+            other.GetComponent<Ou>().grabHold(transform);
         }
     }
 

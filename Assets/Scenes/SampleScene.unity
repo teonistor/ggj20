@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 192376451}
   - component: {fileID: 192376450}
   - component: {fileID: 192376449}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BlueBarz
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &192376451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,9 +242,6 @@ MonoBehaviour:
   minScale: 1
   maxScale: 4.5
   currentScale: 2
-  wallsLayer:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!23 &192376452
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -425,7 +422,8 @@ GameObject:
   - component: {fileID: 371328117}
   - component: {fileID: 371328120}
   - component: {fileID: 371328116}
-  m_Layer: 0
+  - component: {fileID: 371328121}
+  m_Layer: 9
   m_Name: Ou
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -471,7 +469,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: cdc0088901498a04d9786375a7be0e16, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -508,7 +506,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371328115}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: -5, z: 0}
+  m_LocalPosition: {x: 24.6, y: 7.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -524,12 +522,24 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &371328121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371328115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f48c9dc79fa6ffa42bb0dd9cbdd4547a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &615985588
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,7 +554,7 @@ GameObject:
   - component: {fileID: 615985593}
   - component: {fileID: 615985594}
   - component: {fileID: 615985589}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RedBarz
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -659,9 +669,6 @@ MonoBehaviour:
   minScale: 1
   maxScale: 4.5
   currentScale: 2
-  wallsLayer:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!50 &615985594
 Rigidbody2D:
   serializedVersion: 4
@@ -682,7 +689,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
