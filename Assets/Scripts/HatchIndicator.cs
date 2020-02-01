@@ -7,7 +7,7 @@ public class HatchIndicator : MonoBehaviour {
 
     private SpriteMask mask;
     private float t;
-    internal Ou ou;
+    internal Player player;
 
     void Awake () {
         mask = GetComponentInChildren<SpriteMask>();
@@ -18,7 +18,7 @@ public class HatchIndicator : MonoBehaviour {
         t += Time.deltaTime;
         mask.alphaCutoff = t / loadTime;
         if (t > loadTime) {
-            // TODO callback
+            player.HatcingComplete();
             Destroy(gameObject);
         }
     }

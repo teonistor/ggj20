@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ou : MonoBehaviour {
+    //enum State { Initial, Grabbed, Nest, Hatching}
 
     private const float maxSlideInTime = 3f;
 
@@ -10,8 +11,7 @@ public class Ou : MonoBehaviour {
     private int wallsLayer;
     private int nestLayer;
     private bool isHeld;
-
-    private Player lastPlayer;
+    
 
     void Awake() {
         r2d = GetComponent<Rigidbody2D>();
@@ -30,22 +30,6 @@ public class Ou : MonoBehaviour {
         if (!isHeld && other.gameObject.layer == wallsLayer) {
             Destroy(gameObject);
         }
-        else if (!isHeld && other.gameObject.layer == nestLayer && lastPlayer != null)
-        {
-            if (other.gameObject.name == "BlueNest" && lastPlayer.whichPlayer == Player.WhichPlayer.Blue)
-            {
-                lastPlayer.score++;
-                print(lastPlayer.score);
-                Destroy(gameObject);
-            }
-            else if (other.gameObject.name == "RedNest" && lastPlayer.whichPlayer == Player.WhichPlayer.Red)
-            {
-                lastPlayer.score++;
-                print(lastPlayer.score);
-                Destroy(gameObject);
-
-            }
-        }
     }
 
     internal void SlideIn(Vector3 leftmost, Vector3 rightmost) {
@@ -63,42 +47,17 @@ public class Ou : MonoBehaviour {
         r2d.bodyType = RigidbodyType2D.Dynamic;
     }
 
-    internal Ou GrabHold(Transform holder) {
-        if (!isHeld) {
-            isHeld = true;
-            lastPlayer = holder.GetComponent<Player>();
-            r2d.bodyType = RigidbodyType2D.Kinematic;
-            r2d.velocity = Vector2.zero;
-            transform.parent = holder;
-            transform.localPosition = new Vector3(1f, 1f, 0f);
-            return this;
-        }
-        return null;
+    internal void GrabHold(Transform holder) {
+        isHeld = true;
+        r2d.bodyType = RigidbodyType2D.Kinematic;
+        r2d.velocity = Vector2.zero;
+        transform.parent = holder;
     }
 
-    internal Ou Throw(Vector2 velo) {
-        if (isHeld) {
-            isHeld = false;
-            transform.parent = null;
-            r2d.bodyType = RigidbodyType2D.Dynamic;
-            r2d.velocity = velo;
-            return null;
-        }
-        return this;
+    internal void Throw(Vector2 velo) {
+        isHeld = false;
+        transform.parent = null;
+        r2d.bodyType = RigidbodyType2D.Dynamic;
+        r2d.velocity = velo;
     }
-
-    internal Ou PutInNest(Transform nest) {
-        if (isHeld) {
-            // Another bool ??
-            transform.parent = nest;
-            // TODO Fit around; n.b. Nest is rotated because capsule
-            transform.localPosition = new Vector3(0.6f + Random.value * 0.4f, -0.1f + Random.value * 0.2f, 0f);
-            return null;
-        }
-        return this;
-    }
-
-    //void OnClossisionEnter2D (Collision2D collision) {
-    //    print(collision.gameObject.layer);
-    //}
 }

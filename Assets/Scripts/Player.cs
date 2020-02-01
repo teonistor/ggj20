@@ -5,6 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))][RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour {
 
+    private static readonly Vector3 carryPosition = new Vector3 (1f, 1f, 0f);
+    private static readonly Vector3 hatchPosition = new Vector3(0f, -0.8f, 0f);
+
     public int score;
 
     public enum WhichPlayer { Red, Blue }
@@ -14,12 +17,9 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private float moveSpeed = 25f,
                   jumpSpeed = 100f,
-
         jumpIntensity = 300f,
-                            baseJumpDuration = 0.4f, resizeRate = 2f,
-                            minScale = 1f,
-                            maxScale = 4f, currentScale = 1f;
-    
+        baseJumpDuration = 0.4f;
+    [SerializeField] private GameObject hatchIndicator;
 
     private Rigidbody2D r2d;
     private LayerMask wallsLayer;
@@ -27,8 +27,9 @@ public class Player : MonoBehaviour {
     private int nestLayer;
     private Ou ouHeld;
     private float jumpDurationRemaining;
-    private bool controlsEnabled = true;
+    //private bool controlsEnabled = true;
     private bool nearNest;
+    private HatchIndicator hatchIndicatorInProgress;
 
     //[SerializeField] private AudioClip bounce, fall, burn, inflate, levelUp, collect;
     //private new AudioSource audio;
@@ -63,11 +64,12 @@ public class Player : MonoBehaviour {
         nestLayer = LayerMask.NameToLayer("Nest");
         ouHeld = null;
         nearNest = false;
+        hatchIndicatorInProgress = null;
         //audio = GetComponent<AudioSource>();
     }
 
     void FixedUpdate () {
-        if (controlsEnabled) {
+        //if (controlsEnabled) {
             // Horizontal movement
             //r2d.AddForce(new Vector2(Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed, 0f));
             Vector2 velo = r2d.velocity;
@@ -98,7 +100,7 @@ public class Player : MonoBehaviour {
             }
             else if (touchesFloor) {
                 // Refill jump when touching the floor and not trying to jump
-                jumpDurationRemaining = baseJumpDuration * currentScale;
+                jumpDurationRemaining = baseJumpDuration;
                 jumpIntensity = 270f;
             }
             else {
@@ -119,20 +121,30 @@ public class Player : MonoBehaviour {
             //        Destroy(gameObject);
             //    }
             //}
-        }
+        //}
     }
 
     void Update () {
-        if (controlsEnabled) {
+        if (hatchIndicatorInProgress == null) {
             if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
-                ouHeld = ouHeld.Throw(new Vector2(2f*r2d.velocity.x, 15f));
+                ouHeld.Throw(new Vector2(2f*r2d.velocity.x, 15f));
+                ouHeld = null;
             }
 
             if (Input.GetButtonDown(whichPlayer + "Hatch") && nearNest) {
                 // TODO Animația de clocire
                 if(ouHeld != null) {
-                    ouHeld.transform.localPosition = new Vector3(0f, -0.8f, 0f);
+                    ouHeld.transform.localPosition = hatchPosition;
+                    hatchIndicatorInProgress = Instantiate(hatchIndicator, transform, false).GetComponent<HatchIndicator>();
+                    hatchIndicatorInProgress.player = this;
                 }
+            }
+
+        } else {
+            if(Input.GetButtonUp(whichPlayer + "Hatch")) {
+                Destroy(hatchIndicatorInProgress.gameObject);
+                hatchIndicatorInProgress = null;
+                ouHeld.transform.localPosition = carryPosition;
             }
         }
 
@@ -150,16 +162,18 @@ public class Player : MonoBehaviour {
 
     void OnTriggerEnter2D (Collider2D other) {
         if (ouHeld== null && other.gameObject.layer == ouLayer) {
-            ouHeld = other.GetComponent<Ou>().GrabHold(transform);
+            ouHeld = other.GetComponent<Ou>();
+            ouHeld.GrabHold(transform);
+            ouHeld.transform.localPosition = carryPosition;
         }
 
         else if (other.gameObject.layer == nestLayer) {
             nearNest = true;
             if (ouHeld != null) {
-                ouHeld=ouHeld.PutInNest(other.transform);
-                if (ouHeld==null) {
-                    score++;
-                }
+                //ouHeld=ouHeld.PutInNest(other.transform);
+                //if (ouHeld==null) {
+                //    score++;
+                //}
             }
         }
     }
@@ -170,20 +184,24 @@ public class Player : MonoBehaviour {
         }
     }
 
-    internal void itemCollected () {
+    internal void HatcingComplete() {
+        print("TODO hatching complete");
+    }
+
+    //internal void itemCollected () {
         //audio.clip = collect;
         //audio.Play();
-    }
+    //}
 
-    public void freeze () {
-        r2d.bodyType = RigidbodyType2D.Static;
-        controlsEnabled = false;
-    }
+    //public void freeze () {
+    //    r2d.bodyType = RigidbodyType2D.Static;
+    //    controlsEnabled = false;
+    //}
 
-    public void defrost () {
-        controlsEnabled = true;
-        r2d.bodyType = RigidbodyType2D.Dynamic;
-    }
+    //public void defrost () {
+    //    controlsEnabled = true;
+    //    r2d.bodyType = RigidbodyType2D.Dynamic;
+    //}
 
     //public void performLevelFinishAnimation () {
     //    StartCoroutine(levelFinishAnimation());
