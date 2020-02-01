@@ -30,6 +30,7 @@ public class Ou : MonoBehaviour {
         if (!isHeld) {
             isHeld = true;
             r2d.bodyType = RigidbodyType2D.Kinematic;
+            r2d.velocity = Vector2.zero;
             transform.parent = holder;
             transform.localPosition = new Vector3(1f, 1f, 0f);
             return true;
@@ -44,6 +45,16 @@ public class Ou : MonoBehaviour {
             r2d.bodyType = RigidbodyType2D.Dynamic;
             r2d.velocity = velo;
             return true;
+        }
+        return false;
+    }
+
+    internal bool PutInNest(Transform nest) {
+        if (isHeld) {
+            // Another bool ??
+            transform.parent = nest;
+            // TODO Fit around; n.b. Nest is rotated because capsule
+            transform.localPosition = new Vector3(0.8f, 0f, 0f);
         }
         return false;
     }

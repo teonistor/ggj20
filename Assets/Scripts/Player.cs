@@ -22,9 +22,11 @@ public class Player : MonoBehaviour {
     private Rigidbody2D r2d;
     private LayerMask wallsLayer;
     private int ouLayer;
+    private int nestLayer;
     private Ou ouHeld;
     private float jumpDurationRemaining;
     private bool controlsEnabled = true;
+    private bool nearNest;
 
     //[SerializeField] private AudioClip bounce, fall, burn, inflate, levelUp, collect;
     //private new AudioSource audio;
@@ -58,7 +60,9 @@ public class Player : MonoBehaviour {
         r2d = GetComponent<Rigidbody2D>();
         wallsLayer = LayerMask.GetMask("Walls");
         ouLayer = LayerMask.NameToLayer("Ou");
+        nestLayer = LayerMask.NameToLayer("Nest");
         ouHeld = null;
+        nearNest = false;
         //audio = GetComponent<AudioSource>();
     }
 
@@ -124,6 +128,10 @@ public class Player : MonoBehaviour {
                 ouHeld.Throw(new Vector2(-15f, 15f));
                 ouHeld = null;
             }
+
+            if (Input.GetButtonDown(whichPlayer + "Hatch") && nearNest) {
+                // TODO Animația de clocire
+            }
         }
 
         // Handle pause
@@ -137,9 +145,23 @@ public class Player : MonoBehaviour {
             //}
         }
     }
+
     void OnTriggerEnter2D (Collider2D other) {
         if (other.gameObject.layer == ouLayer) {
             (ouHeld = other.GetComponent<Ou>()).GrabHold(transform);
+        }
+
+        else if (other.gameObject.layer == nestLayer) {
+            nearNest = true;
+            if (ouHeld != null) {
+                ouHeld.PutInNest(other.transform);
+            }
+        }
+    }
+
+    void OnTriggerExitr2D (Collider2D other) {
+        if (other.gameObject.layer == nestLayer) {
+            nearNest = false;
         }
     }
 
