@@ -32,6 +32,9 @@ public class Player : MonoBehaviour {
     public bool isJumpAllowed { get { return /*TutorialElement.isJumpAllowed*/ true; } }
 
     private Collider2D[] touchCheckBuffer = new Collider2D[5]; // Needed to do non-alloc collision detection (more memory-efficient)
+
+    private int score;
+
     private bool touchesFloor {
         get {
             Vector3 floorPoint = transform.position;
