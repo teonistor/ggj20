@@ -155,16 +155,14 @@ public class Player : MonoBehaviour {
       velo.x = Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed;
 
         if (hatchIndicatorInProgress == null) {
-            if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
-                ouHeld.Throw(new Vector2(2f*r2d.velocity.x, 15f));
-                ouHeld = null;
-            }
-
             if (Input.GetButtonDown(whichPlayer + "Hatch") && couldHatch) {
-                // TODO Animația de clocire
-                    ouHeld.transform.localPosition = hatchPosition;
-                    hatchIndicatorInProgress = Instantiate(hatchIndicator, transform, false).GetComponent<HatchIndicator>();
-                    hatchIndicatorInProgress.player = this;
+                ouHeld.transform.localPosition = hatchPosition;
+                hatchIndicatorInProgress = Instantiate(hatchIndicator, transform, false).GetComponent<HatchIndicator>();
+                hatchIndicatorInProgress.player = this;
+
+            } else if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
+                ouHeld.Throw(new Vector2(2f * r2d.velocity.x, 15f));
+                ouHeld = null;
             }
 
         } else {
