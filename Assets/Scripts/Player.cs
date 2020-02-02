@@ -49,7 +49,7 @@ public class Player : MonoBehaviour {
         get {
             Vector3 floorPoint = transform.position;
             floorPoint.y -= transform.localScale.y * magic_floor_check_value;
-            print(whichPlayer + " floor point " + floorPoint);
+            //print(whichPlayer + " floor point " + floorPoint);
             return Physics2D.OverlapCircleNonAlloc(floorPoint, 0.2f, touchCheckBuffer, wallsLayer) > 0;
         }
     }
@@ -99,18 +99,18 @@ public class Player : MonoBehaviour {
             if (touchesCeiling) {
                 // Empty jump "fuel" when hitting ceiling
                 jumpDurationRemaining = 0f;
-                print(whichPlayer + " touches ceiling");
+                //print(whichPlayer + " touches ceiling");
             }
             else if (isJumpAllowed && Input.GetButton(whichPlayer + "Jump")) {
                 //print(whichPlayer + " jump " + jumpDurationRemaining);
                 // Mid-jump or jump starting now: add vertical force while there still is jump "fuel"
-                print("Jumping for duration " + jumpDurationRemaining);
+                //print("Jumping for duration " + jumpDurationRemaining);
                 if (jumpDurationRemaining > 0f) {
                     jumpDurationRemaining -= Time.fixedDeltaTime;
                     // r2d.AddForce(new Vector2(0f, jumpIntensity));
                     velo.y = jumpSpeed;
                     jumpIntensity *= 0.98f;
-                    print("Velo is :" + velo + "jump speed "+ jumpSpeed);
+                    //print("Velo is :" + velo + "jump speed "+ jumpSpeed);
 
                     // Perform bounce sound when leaving floor
                     //if (touchesFloor && !audio.isPlaying) {
@@ -123,11 +123,11 @@ public class Player : MonoBehaviour {
                 // Refill jump when touching the floor and not trying to jump
                 jumpDurationRemaining = baseJumpDuration;
                 jumpIntensity = 270f;
-                print(whichPlayer + " touches floor, can jump");
+                //print(whichPlayer + " touches floor, can jump");
             }
             else {
                 // Empty jump "fuel" when in the air and no longer jumping
-                print(whichPlayer + " no touches floor, no jump");
+                //print(whichPlayer + " no touches floor, no jump");
                 jumpDurationRemaining = 0f;
             }
             // print("Velo is :" + velo);
