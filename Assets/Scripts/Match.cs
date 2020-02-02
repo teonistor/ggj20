@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class Match : MonoBehaviour
 {
     const float INITIAL_TIME = 60;  // match time in seconds
@@ -23,6 +23,7 @@ public class Match : MonoBehaviour
     public Text prematchText;
 
     public GameObject notBirp;
+    public Button replayButton;
 
     private float timeLeft = 0f;
     private int timeLeftToShow = 0;
@@ -71,6 +72,10 @@ public class Match : MonoBehaviour
     // End the game
     void GameOver() 
     {
+        replayButton.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene(1);
+        });
         gameOverCanvas.SetActive(true);
         if (bluePlayer.score > redPlayer.score)
             gameOverText.text = "Blue Player Won!";
