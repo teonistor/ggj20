@@ -373,14 +373,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'You''re a bird
-
-    You want eggs to hatch and hatchlings to get to safety
-
-    You
-    can also throw eggs at the other bird
-
-'
+  m_Text: "You're a bird\nYou want eggs to hatch and hatchlings to get to safety\nYou
+    can also throw eggs at the other bird\n\nLeft Controls: WASD \nRight Controls:
+    Arrow keys"
 --- !u!222 &548108341
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -727,7 +722,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5542639b39abc674db9b931bfd4adcc2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5a58ff62d9ff4450f9c3bd3df9a14142, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1329,7 +1324,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Joc cu pasari, dar fara titlu
+  m_Text: Re:Pair
 --- !u!222 &1807862123
 CanvasRenderer:
   m_ObjectHideFlags: 0
