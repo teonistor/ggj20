@@ -7,6 +7,9 @@ public class Ou : MonoBehaviour {
 
     private const float maxSlideInTime = 3f;
 
+    public Sprite realSprite;
+    public PairColor pairColor;
+
     private Rigidbody2D r2d;
     private int wallsLayer;
     private int nestLayer;
@@ -45,6 +48,7 @@ public class Ou : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
         r2d.bodyType = RigidbodyType2D.Dynamic;
+        GetComponent<SpriteRenderer>().sprite = realSprite;
     }
 
     internal void GrabHold(Transform holder) {

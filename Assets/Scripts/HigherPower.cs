@@ -6,13 +6,12 @@ public class HigherPower : MonoBehaviour {
 
     private static readonly Vector3 leftmost = new Vector3(-77f, 43f, 0f);
     private static readonly Vector3 rightmost = new Vector3(77f, 43f, 0f);
-
-    [SerializeField] private Animation animation;
-    [SerializeField] private GameObject ou;
+    
+    [SerializeField] private GameObject[] ous;
  
     IEnumerator Start() {
         while (true) {
-            GameObject newOu = Instantiate(ou);
+            GameObject newOu = Instantiate(ous[Random.Range(0,ous.Length)]);
             newOu.GetComponent<Ou>().SlideIn(leftmost,rightmost);
 
             yield return new WaitForSeconds(5f);

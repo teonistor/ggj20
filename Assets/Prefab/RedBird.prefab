@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 550686747446927351}
   - component: {fileID: 550686747446927352}
   - component: {fileID: 550686747446927355}
+  - component: {fileID: 5250813521229826685}
   m_Layer: 11
   m_Name: RedBird
   m_TagString: Untagged
@@ -47,15 +48,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  magic_floor_check_value: 2
   whichPlayer: 0
   moveSpeed: 25
   jumpSpeed: 100
   jumpIntensity: 300
   baseJumpDuration: 1
-  resizeRate: 2
-  minScale: 1
-  maxScale: 10
-  currentScale: 1
+  hatchIndicator: {fileID: 0}
+  hatchlings: []
+  intaltime_img_pixely: 0
+  numbarul_ala: 0
 --- !u!50 &550686747446927351
 Rigidbody2D:
   serializedVersion: 4
@@ -153,3 +155,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5250813521229826685
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550686747446927353}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4a34fd0d5cf6fe74e9e0be8bcc7e9ced, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
