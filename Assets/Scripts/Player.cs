@@ -85,12 +85,12 @@ public class Player : MonoBehaviour {
 
             if (velo.x != 0){
               facing_left = velo.x < 0;
-              anim.SetBool("isWalkingLeft", facing_left);
-              anim.SetBool("isWalkingRight", !facing_left);
+              //anim.SetBool("isWalkingLeft", facing_left);
+              //anim.SetBool("isWalkingRight", !facing_left);
             }
             else{
-              anim.SetBool("isWalkingRight", false);
-              anim.SetBool("isWalkingLeft", false);
+              //anim.SetBool("isWalkingRight", false);
+              //anim.SetBool("isWalkingLeft", false);
             }
 
 
@@ -131,8 +131,8 @@ public class Player : MonoBehaviour {
             }
             // print("Velo is :" + velo);
             if (velo.y >= 0){
-              anim.SetBool("isJumpingRight", !facing_left ) ;
-              anim.SetBool("isJumpingLeft", facing_left) ;
+              //anim.SetBool("isJumpingRight", !facing_left ) ;
+              //anim.SetBool("isJumpingLeft", facing_left) ;
             }
             r2d.velocity = velo;
 
@@ -151,17 +151,18 @@ public class Player : MonoBehaviour {
     }
 
     void Update () {
-        if (hatchIndicatorInProgress == null) {
-            if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
-                ouHeld.Throw(new Vector2(2f*r2d.velocity.x, 15f));
-                ouHeld = null;
-            }
+      Vector2 velo = r2d.velocity;
+      velo.x = Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed;
 
+        if (hatchIndicatorInProgress == null) {
             if (Input.GetButtonDown(whichPlayer + "Hatch") && couldHatch) {
-                // TODO Animația de clocire
-                    ouHeld.transform.localPosition = hatchPosition;
-                    hatchIndicatorInProgress = Instantiate(hatchIndicator, transform, false).GetComponent<HatchIndicator>();
-                    hatchIndicatorInProgress.player = this;
+                ouHeld.transform.localPosition = hatchPosition;
+                hatchIndicatorInProgress = Instantiate(hatchIndicator, transform, false).GetComponent<HatchIndicator>();
+                hatchIndicatorInProgress.player = this;
+
+            } else if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
+                ouHeld.Throw(new Vector2(2f * r2d.velocity.x, 15f));
+                ouHeld = null;
             }
 
         } else {
@@ -171,6 +172,28 @@ public class Player : MonoBehaviour {
                 ouHeld.transform.localPosition = carryPosition;
             }
         }
+
+        if (Mathf.Abs(velo.y) >= 1) { // if jumping
+            anim.SetBool("isJumpingRight", !facing_left);
+            anim.SetBool("isJumpingLeft", facing_left);
+            anim.SetBool("isWalkingLeft", false);
+            anim.SetBool("isWalkingRight", false);
+        }
+        else {
+          anim.SetBool("isJumpingRight", false);
+          anim.SetBool("isJumpingLeft", false);
+
+          if (velo.x != 0){
+            facing_left = velo.x < 0;
+            anim.SetBool("isWalkingLeft", facing_left);
+            anim.SetBool("isWalkingRight", !facing_left);
+          }
+          else {
+            anim.SetBool("isWalkingRight", false);
+            anim.SetBool("isWalkingLeft", false);
+          }
+        }
+
 
         // Handle pause
         if (Input.GetButtonDown("Cancel")) {
@@ -182,6 +205,8 @@ public class Player : MonoBehaviour {
             //    Universe.TogglePause();
             //}
         }
+
+
     }
 
     void OnTriggerEnter2D (Collider2D other) {
@@ -194,18 +219,25 @@ public class Player : MonoBehaviour {
 
         else if (other.gameObject.layer == ouLayer && hatchlingHeld == null) {
             Ou otherOu = other.GetComponent<Ou>();
-            if (!otherOu.isHeld) {
-               ouHeld = otherOu;
-               ouHeld.GrabHold(transform);
-               ouHeld.transform.localPosition = carryPosition;
+            if (!otherOu.isHeld ) {
+                if (otherOu.owner == null || otherOu.owner == this) {
+                    ouHeld = otherOu;
+                    ouHeld.GrabHold(this);
+                    ouHeld.transform.localPosition = carryPosition;
+                } else {
+
+                }
             }
         }
 
         if (hatchlingHeld != null) {
-            if (other.gameObject.layer == ouLayer && /*TODO stun condition*/ false) {
-                Destroy(other.gameObject);
-                Destroy(hatchlingHeld.gameObject);
-                hatchlingHeld = null;
+            if (other.gameObject.layer == ouLayer) {
+                Ou otherOu = other.GetComponent<Ou>();
+                if (otherOu.owner != null && otherOu.owner != this) {
+                    Destroy(other.gameObject);
+                    Destroy(hatchlingHeld.gameObject);
+                    hatchlingHeld = null;
+                }
             }
 
             if (other.gameObject.layer == houseLayer) {
@@ -223,6 +255,11 @@ public class Player : MonoBehaviour {
     void OnTriggerExit2D (Collider2D other) {
         if (other.gameObject.layer == nestLayer) {
             couldHatch = false;
+            if (hatchIndicatorInProgress != null) {
+                Destroy(hatchIndicatorInProgress.gameObject);
+                hatchIndicatorInProgress = null;
+                ouHeld.transform.localPosition = carryPosition;
+            }
         }
     }
 
