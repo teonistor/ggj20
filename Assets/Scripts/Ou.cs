@@ -13,8 +13,8 @@ public class Ou : MonoBehaviour {
     private Rigidbody2D r2d;
     private int wallsLayer;
     private int nestLayer;
-    private bool isHeld;
-    
+
+    internal bool isHeld { get; private set; }
 
     void Awake() {
         r2d = GetComponent<Rigidbody2D>();

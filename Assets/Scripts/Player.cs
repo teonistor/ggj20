@@ -17,7 +17,8 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private float moveSpeed = 25f,
                   jumpSpeed = 100f,
-        jumpIntensity = 300f,
+        baseJumpIntensity = 100f,
+        jumpIntensity = 100f,
         baseJumpDuration = 0.4f;
     [SerializeField] private GameObject hatchIndicator;
     [SerializeField] private GameObject hatchling;
@@ -35,8 +36,6 @@ public class Player : MonoBehaviour {
     //private bool controlsEnabled = true;
     private bool couldHatch;
     private HatchIndicator hatchIndicatorInProgress;
-
-    public float intaltime_img_pixely, numbarul_ala;
 
     //[SerializeField] private AudioClip bounce, fall, burn, inflate, levelUp, collect;
     //private new AudioSource audio;
@@ -122,7 +121,7 @@ public class Player : MonoBehaviour {
             else if (touchesFloor) {
                 // Refill jump when touching the floor and not trying to jump
                 jumpDurationRemaining = baseJumpDuration;
-                jumpIntensity = 270f;
+                jumpIntensity = baseJumpIntensity;
                 //print(whichPlayer + " touches floor, can jump");
             }
             else {
@@ -187,16 +186,19 @@ public class Player : MonoBehaviour {
 
     void OnTriggerEnter2D (Collider2D other) {
 
-        if(ouHeld != null) {
+        if (ouHeld != null) {
             if (other.gameObject.layer == nestLayer && ouHeld.pairColor == other.GetComponent<Nest>().pairColor) {
                 couldHatch = true;
             }
         }
 
         else if (other.gameObject.layer == ouLayer && hatchlingHeld == null) {
-            ouHeld = other.GetComponent<Ou>();
-            ouHeld.GrabHold(transform);
-            ouHeld.transform.localPosition = carryPosition;
+            Ou otherOu = other.GetComponent<Ou>();
+            if (!otherOu.isHeld) {
+               ouHeld = otherOu;
+               ouHeld.GrabHold(transform);
+               ouHeld.transform.localPosition = carryPosition;
+            }
         }
 
         if (hatchlingHeld != null) {
