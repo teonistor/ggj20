@@ -7,6 +7,7 @@ public class Player : MonoBehaviour {
     private const int scoreGainOnNonmatching = 1;
     private static readonly Vector3 carryPosition = new Vector3 (1f, 1f, 0f);
     private static readonly Vector3 hatchPosition = new Vector3(0f, -0.4f, -0.4f);
+    private static readonly Vector2 vrum = new Vector2(150f, 0f);
 
     public int score;
     public float magic_floor_check_value = 4.5f;
@@ -161,7 +162,7 @@ public class Player : MonoBehaviour {
                 hatchIndicatorInProgress.player = this;
 
             } else if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
-                ouHeld.Throw(new Vector2(2f * r2d.velocity.x, 15f));
+                ouHeld.Throw((facing_left ? -1 : 1) * vrum);
                 ouHeld = null;
             }
 
