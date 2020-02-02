@@ -40,9 +40,9 @@ public class Player : MonoBehaviour {
     private StunIndicator stunIndicatorInProgress;
     private HatchIndicator hatchIndicatorInProgress;
 
-    //[SerializeField] private AudioClip bounce, fall, burn, inflate, levelUp, collect;
-    //private new AudioSource audio;
-  
+    [SerializeField] private AudioClip hatching, hatched, shoot;
+    private new AudioSource audio;
+
     private Collider2D[] touchCheckBuffer = new Collider2D[5]; // Needed to do non-alloc collision detection (more memory-efficient)
 
     private bool touchesFloor {
@@ -74,7 +74,7 @@ public class Player : MonoBehaviour {
         ouHeld = null;
         couldHatch = false;
         hatchIndicatorInProgress = null;
-        //audio = GetComponent<AudioSource>();
+        audio = GetComponent<AudioSource>();
     }
 
     void FixedUpdate () {
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour {
               facing_left = velo.x < 0;
             }
 
-    
+
             // Vertical movement
             if (touchesCeiling) {
                 // Empty jump "fuel" when hitting ceiling
@@ -128,10 +128,12 @@ public class Player : MonoBehaviour {
                     ouHeld.transform.localPosition = hatchPosition;
                     hatchIndicatorInProgress = Instantiate(hatchIndicator, transform, false).GetComponent<HatchIndicator>();
                     hatchIndicatorInProgress.player = this;
+                    audio.PlayOneShot(hatching);
 
                 } else if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
                     ouHeld.Throw((facing_left ? -1 : 1) * vrum);
                     ouHeld = null;
+                    audio.PlayOneShot(shoot);
                 }
 
             }  else {
@@ -202,6 +204,7 @@ public class Player : MonoBehaviour {
                     Destroy(other.gameObject);
                     if (stunIndicatorInProgress == null) {
                         stunIndicatorInProgress = Instantiate(stunIndicator).GetComponent<StunIndicator>();
+                        stunIndicatorInProgress.player = this;
                     }
                     if (hatchlingHeld != null) {
                         Destroy(hatchlingHeld.gameObject);
@@ -246,6 +249,7 @@ public class Player : MonoBehaviour {
         hatchlingHeld = Instantiate(hatchling, transform).GetComponent<Hatchling>();
         hatchlingHeld.transform.localPosition = carryPosition;
         couldHatch = false;
+        audio.PlayOneShot(hatched);
     }
 
     //internal void itemCollected () {
