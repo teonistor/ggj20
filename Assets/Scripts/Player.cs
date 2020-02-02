@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))][RequireComponent(typeof(AudioSource))]
@@ -203,7 +203,7 @@ public class Player : MonoBehaviour {
                 } else {
                     Destroy(other.gameObject);
                     if (stunIndicatorInProgress == null) {
-                        stunIndicatorInProgress = Instantiate(stunIndicator).GetComponent<StunIndicator>();
+                        stunIndicatorInProgress = Instantiate(stunIndicator,transform, false).GetComponent<StunIndicator>();
                         stunIndicatorInProgress.player = this;
                     }
                     if (hatchlingHeld != null) {

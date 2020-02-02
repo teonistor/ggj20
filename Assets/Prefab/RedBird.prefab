@@ -56,7 +56,7 @@ MonoBehaviour:
   baseJumpIntensity: 100
   jumpIntensity: 100
   baseJumpDuration: 0.3
-  stunIndicator: {fileID: 3236844917365807241, guid: 5f3898c22c39bc1408bad0a5f6015dd8,
+  stunIndicator: {fileID: 2120168371273397446, guid: d5352721b9d6f4335953f57748945690,
     type: 3}
   hatchIndicator: {fileID: 2120168371273397446, guid: 34bd066053263514c99cd4f46124f441,
     type: 3}

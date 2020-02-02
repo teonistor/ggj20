@@ -7,15 +7,17 @@ public class StunIndicator : MonoBehaviour {
 
     private float t;
     internal Player player;
+    private SpriteMask mask;
 
     void Awake () {
         t = 0;
+        mask = GetComponentInChildren<SpriteMask>();
     }
 
 
     void Update () {
         t += Time.deltaTime;
-        // TODO move sth
+        mask.alphaCutoff = 1- t / loadTime;
         if (t > loadTime) {
             player.StunOver();
             Destroy(gameObject);

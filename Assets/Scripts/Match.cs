@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Match : MonoBehaviour
 {
-    const float INITIAL_TIME = 60;  // match time in seconds
+    const float INITIAL_TIME = 150f;  // match time in seconds
     const float INITIAL_TIME_FREZE = 6f;  // freeze time in seconds
 
     public Player bluePlayer;
@@ -24,7 +24,6 @@ public class Match : MonoBehaviour
     public Text prematchText;
 
     public GameObject notBirp;
-    public Button replayButton;
 
     private float timeLeft = 0f;
     private int timeLeftToShow = 0;
@@ -48,7 +47,6 @@ public class Match : MonoBehaviour
         }
         else {
             GameOver();
-            Destroy(this);
         }
     }
 
@@ -73,10 +71,7 @@ public class Match : MonoBehaviour
     // End the game
     void GameOver() 
     {
-        replayButton.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene(1);
-        });
+        
         gameOverCanvas.SetActive(true);
         if (bluePlayer.score > redPlayer.score)
             gameOverText.text = "Blue Player Won!";
@@ -89,6 +84,13 @@ public class Match : MonoBehaviour
         }
 
         Time.timeScale = 0f;
+    }
+
+    public void PlayLevel1 () {
+        SceneManager.LoadScene(1);
+    }
+    public void PlayLevel2 () {
+        SceneManager.LoadScene(2);
     }
 
     public class Prematch : MonoBehaviour 
