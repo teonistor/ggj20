@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4850292916382434832}
   - component: {fileID: -187705380033815191}
   - component: {fileID: -8720729299148538880}
+  - component: {fileID: 5303430684790806846}
   m_Layer: 9
   m_Name: EggYellow
   m_TagString: Untagged
@@ -98,6 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   realSprite: {fileID: 21300000, guid: 1b7e6409f77aad84ea264ab603bb3c2c, type: 3}
   pairColor: 1
+  firstFallProtect: 0
 --- !u!50 &-187705380033815191
 Rigidbody2D:
   serializedVersion: 4
@@ -134,4 +136,20 @@ CapsuleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.03}
   m_Size: {x: 1.23, y: 1.72}
+  m_Direction: 0
+--- !u!70 &5303430684790806846
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8171209387597522281}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1, y: 1.5}
   m_Direction: 0

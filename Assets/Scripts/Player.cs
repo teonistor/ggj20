@@ -85,12 +85,12 @@ public class Player : MonoBehaviour {
 
             if (velo.x != 0){
               facing_left = velo.x < 0;
-              anim.SetBool("isWalkingLeft", facing_left);
-              anim.SetBool("isWalkingRight", !facing_left);
+              //anim.SetBool("isWalkingLeft", facing_left);
+              //anim.SetBool("isWalkingRight", !facing_left);
             }
             else{
-              anim.SetBool("isWalkingRight", false);
-              anim.SetBool("isWalkingLeft", false);
+              //anim.SetBool("isWalkingRight", false);
+              //anim.SetBool("isWalkingLeft", false);
             }
 
 
@@ -131,8 +131,8 @@ public class Player : MonoBehaviour {
             }
             // print("Velo is :" + velo);
             if (velo.y >= 0){
-              anim.SetBool("isJumpingRight", !facing_left ) ;
-              anim.SetBool("isJumpingLeft", facing_left) ;
+              //anim.SetBool("isJumpingRight", !facing_left ) ;
+              //anim.SetBool("isJumpingLeft", facing_left) ;
             }
             r2d.velocity = velo;
 
@@ -151,6 +151,9 @@ public class Player : MonoBehaviour {
     }
 
     void Update () {
+      Vector2 velo = r2d.velocity;
+      velo.x = Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed;
+
         if (hatchIndicatorInProgress == null) {
             if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
                 ouHeld.Throw(new Vector2(2f*r2d.velocity.x, 15f));
@@ -172,6 +175,28 @@ public class Player : MonoBehaviour {
             }
         }
 
+        if (Mathf.Abs(velo.y) >= 1) { // if jumping
+            anim.SetBool("isJumpingRight", !facing_left);
+            anim.SetBool("isJumpingLeft", facing_left);
+            anim.SetBool("isWalkingLeft", false);
+            anim.SetBool("isWalkingRight", false);
+        }
+        else {
+          anim.SetBool("isJumpingRight", false);
+          anim.SetBool("isJumpingLeft", false);
+
+          if (velo.x != 0){
+            facing_left = velo.x < 0;
+            anim.SetBool("isWalkingLeft", facing_left);
+            anim.SetBool("isWalkingRight", !facing_left);
+          }
+          else {
+            anim.SetBool("isWalkingRight", false);
+            anim.SetBool("isWalkingLeft", false);
+          }
+        }
+
+
         // Handle pause
         if (Input.GetButtonDown("Cancel")) {
             //if (controlsEnabled) {
@@ -182,6 +207,8 @@ public class Player : MonoBehaviour {
             //    Universe.TogglePause();
             //}
         }
+
+
     }
 
     void OnTriggerEnter2D (Collider2D other) {
