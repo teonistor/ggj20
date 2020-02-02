@@ -1,0 +1,17 @@
+{
+"companyName": "Zepler Studios",
+"productName": "Re:Pair",
+"productVersion": "1",
+"dataUrl": "Build_WebGL.data.unityweb",
+"wasmCodeUrl": "Build_WebGL.wasm.code.unityweb",
+"wasmFrameworkUrl": "Build_WebGL.wasm.framework.unityweb",
+"graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"backgroundUrl": "Build_WebGL.jpg",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#FFFFFF",
+"cacheControl": {"default": "must-revalidate"},
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2019.3.0f6"
+}
