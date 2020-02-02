@@ -21,6 +21,7 @@ public class Player : MonoBehaviour {
         baseJumpIntensity = 100f,
         jumpIntensity = 100f,
         baseJumpDuration = 0.4f;
+    [SerializeField] private GameObject stunIndicator;
     [SerializeField] private GameObject hatchIndicator;
     [SerializeField] private GameObject hatchling;
 
@@ -36,13 +37,12 @@ public class Player : MonoBehaviour {
     private float jumpDurationRemaining;
     //private bool controlsEnabled = true;
     private bool couldHatch;
+    private StunIndicator stunIndicatorInProgress;
     private HatchIndicator hatchIndicatorInProgress;
 
     //[SerializeField] private AudioClip bounce, fall, burn, inflate, levelUp, collect;
     //private new AudioSource audio;
-
-    public bool isJumpAllowed { get { return /*TutorialElement.isJumpAllowed*/ true; } }
-
+  
     private Collider2D[] touchCheckBuffer = new Collider2D[5]; // Needed to do non-alloc collision detection (more memory-efficient)
 
     private bool touchesFloor {
@@ -78,45 +78,30 @@ public class Player : MonoBehaviour {
     }
 
     void FixedUpdate () {
-        //if (controlsEnabled) {
-            // Horizontal movement
-            //r2d.AddForce(new Vector2(Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed, 0f));
-            Vector2 velo = r2d.velocity;
+      Vector2 velo = r2d.velocity;
+        if (stunIndicatorInProgress == null) {
             velo.x = Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed;
-
+        }
             if (velo.x != 0){
               facing_left = velo.x < 0;
-              //anim.SetBool("isWalkingLeft", facing_left);
-              //anim.SetBool("isWalkingRight", !facing_left);
-            }
-            else{
-              //anim.SetBool("isWalkingRight", false);
-              //anim.SetBool("isWalkingLeft", false);
             }
 
-
+    
             // Vertical movement
             if (touchesCeiling) {
                 // Empty jump "fuel" when hitting ceiling
                 jumpDurationRemaining = 0f;
                 //print(whichPlayer + " touches ceiling");
             }
-            else if (isJumpAllowed && Input.GetButton(whichPlayer + "Jump")) {
+            else if (stunIndicatorInProgress == null && Input.GetButton(whichPlayer + "Jump")) {
                 //print(whichPlayer + " jump " + jumpDurationRemaining);
                 // Mid-jump or jump starting now: add vertical force while there still is jump "fuel"
                 //print("Jumping for duration " + jumpDurationRemaining);
                 if (jumpDurationRemaining > 0f) {
                     jumpDurationRemaining -= Time.fixedDeltaTime;
-                    // r2d.AddForce(new Vector2(0f, jumpIntensity));
                     velo.y = jumpSpeed;
                     jumpIntensity *= 0.98f;
                     //print("Velo is :" + velo + "jump speed "+ jumpSpeed);
-
-                    // Perform bounce sound when leaving floor
-                    //if (touchesFloor && !audio.isPlaying) {
-                    //    audio.clip = bounce;
-                    //    audio.Play();
-                    //}
                 }
             }
             else if (touchesFloor) {
@@ -130,47 +115,31 @@ public class Player : MonoBehaviour {
                 //print(whichPlayer + " no touches floor, no jump");
                 jumpDurationRemaining = 0f;
             }
-            // print("Velo is :" + velo);
-            if (velo.y >= 0){
-              //anim.SetBool("isJumpingRight", !facing_left ) ;
-              //anim.SetBool("isJumpingLeft", facing_left) ;
-            }
             r2d.velocity = velo;
-
-            // Die if fallen off-screen
-            //if (transform.position.y < minY) {
-            //    if (audio.clip != fall) {
-            //        audio.clip = fall;
-            //        audio.Play();
-            //    }
-            //    else if (!audio.isPlaying) {
-            //        Universe.BeginLevel();
-            //        Destroy(gameObject);
-            //    }
-            //}
-        //}
     }
 
     void Update () {
       Vector2 velo = r2d.velocity;
       velo.x = Input.GetAxis(whichPlayer + "Horizontal") * moveSpeed;
 
-        if (hatchIndicatorInProgress == null) {
-            if (Input.GetButtonDown(whichPlayer + "Hatch") && couldHatch) {
-                ouHeld.transform.localPosition = hatchPosition;
-                hatchIndicatorInProgress = Instantiate(hatchIndicator, transform, false).GetComponent<HatchIndicator>();
-                hatchIndicatorInProgress.player = this;
+        if (stunIndicatorInProgress == null) {
+            if (hatchIndicatorInProgress == null) {
+                if (Input.GetButtonDown(whichPlayer + "Hatch") && couldHatch) {
+                    ouHeld.transform.localPosition = hatchPosition;
+                    hatchIndicatorInProgress = Instantiate(hatchIndicator, transform, false).GetComponent<HatchIndicator>();
+                    hatchIndicatorInProgress.player = this;
 
-            } else if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
-                ouHeld.Throw((facing_left ? -1 : 1) * vrum);
-                ouHeld = null;
-            }
+                } else if (Input.GetButtonDown(whichPlayer + "Fire") && ouHeld != null) {
+                    ouHeld.Throw((facing_left ? -1 : 1) * vrum);
+                    ouHeld = null;
+                }
 
-        } else {
-            if(Input.GetButtonUp(whichPlayer + "Hatch")) {
-                Destroy(hatchIndicatorInProgress.gameObject);
-                hatchIndicatorInProgress = null;
-                ouHeld.transform.localPosition = carryPosition;
+            }  else {
+                if (Input.GetButtonUp(whichPlayer + "Hatch")) {
+                    Destroy(hatchIndicatorInProgress.gameObject);
+                    hatchIndicatorInProgress = null;
+                    ouHeld.transform.localPosition = carryPosition;
+                }
             }
         }
 
@@ -218,29 +187,31 @@ public class Player : MonoBehaviour {
             }
         }
 
-        else if (other.gameObject.layer == ouLayer && hatchlingHeld == null) {
+        else if (other.gameObject.layer == ouLayer) {
             Ou otherOu = other.GetComponent<Ou>();
-            if (!otherOu.isHeld ) {
-                if (otherOu.owner == null || otherOu.owner == this) {
-                    ouHeld = otherOu;
-                    ouHeld.GrabHold(this);
-                    ouHeld.transform.localPosition = carryPosition;
-                } else {
 
+            if (!otherOu.isHeld) {
+                if (otherOu.owner == null || otherOu.owner == this) {
+                    if (hatchlingHeld == null) {
+                        ouHeld = otherOu;
+                        ouHeld.GrabHold(this);
+                        ouHeld.transform.localPosition = carryPosition;
+                    }
+
+                } else {
+                    Destroy(other.gameObject);
+                    if (stunIndicatorInProgress == null) {
+                        stunIndicatorInProgress = Instantiate(stunIndicator).GetComponent<StunIndicator>();
+                    }
+                    if (hatchlingHeld != null) {
+                        Destroy(hatchlingHeld.gameObject);
+                        hatchlingHeld = null;
+                    }
                 }
             }
         }
 
         if (hatchlingHeld != null) {
-            if (other.gameObject.layer == ouLayer) {
-                Ou otherOu = other.GetComponent<Ou>();
-                if (otherOu.owner != null && otherOu.owner != this) {
-                    Destroy(other.gameObject);
-                    Destroy(hatchlingHeld.gameObject);
-                    hatchlingHeld = null;
-                }
-            }
-
             if (other.gameObject.layer == houseLayer) {
                 if (other.GetComponent<House>().pairColor == hatchlingHeld.pairColor) {
                     score += scoreGainOnMatching;
@@ -264,7 +235,12 @@ public class Player : MonoBehaviour {
         }
     }
 
+    internal void StunOver() {
+        stunIndicatorInProgress = null;
+    }
+
     internal void HatcingComplete() {
+        hatchIndicatorInProgress = null;
         Destroy(ouHeld.gameObject);
         ouHeld = null;
         hatchlingHeld = Instantiate(hatchling, transform).GetComponent<Hatchling>();
