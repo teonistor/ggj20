@@ -255,6 +255,11 @@ public class Player : MonoBehaviour {
     void OnTriggerExit2D (Collider2D other) {
         if (other.gameObject.layer == nestLayer) {
             couldHatch = false;
+            if (hatchIndicatorInProgress != null) {
+                Destroy(hatchIndicatorInProgress.gameObject);
+                hatchIndicatorInProgress = null;
+                ouHeld.transform.localPosition = carryPosition;
+            }
         }
     }
 
