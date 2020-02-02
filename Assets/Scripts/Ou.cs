@@ -17,6 +17,7 @@ public class Ou : MonoBehaviour {
     private bool firstFallProtect;
 
     internal bool isHeld { get; private set; }
+    internal Player owner { get; private set; }
 
     void Awake() {
         r2d = GetComponent<Rigidbody2D>();
@@ -28,6 +29,7 @@ public class Ou : MonoBehaviour {
         CapsuleCollider2D[] cc2ds = GetComponents<CapsuleCollider2D>();
         colliderNonTrigger = cc2ds[1];
         isHeld = false;
+        owner = null;
     }
 
 
@@ -61,11 +63,12 @@ public class Ou : MonoBehaviour {
         GetComponent<SpriteRenderer>().sprite = realSprite;
     }
 
-    internal void GrabHold(Transform holder) {
+    internal void GrabHold(Player holder) {
         isHeld = true;
+        owner = holder;
         r2d.bodyType = RigidbodyType2D.Kinematic;
         r2d.velocity = Vector2.zero;
-        transform.parent = holder;
+        transform.parent = holder.transform;
         colliderNonTrigger.enabled = false;
     }
 

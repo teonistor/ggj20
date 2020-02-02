@@ -221,18 +221,25 @@ public class Player : MonoBehaviour {
 
         else if (other.gameObject.layer == ouLayer && hatchlingHeld == null) {
             Ou otherOu = other.GetComponent<Ou>();
-            if (!otherOu.isHeld) {
-               ouHeld = otherOu;
-               ouHeld.GrabHold(transform);
-               ouHeld.transform.localPosition = carryPosition;
+            if (!otherOu.isHeld ) {
+                if (otherOu.owner == null || otherOu.owner == this) {
+                    ouHeld = otherOu;
+                    ouHeld.GrabHold(this);
+                    ouHeld.transform.localPosition = carryPosition;
+                } else {
+
+                }
             }
         }
 
         if (hatchlingHeld != null) {
-            if (other.gameObject.layer == ouLayer && /*TODO stun condition*/ false) {
-                Destroy(other.gameObject);
-                Destroy(hatchlingHeld.gameObject);
-                hatchlingHeld = null;
+            if (other.gameObject.layer == ouLayer) {
+                Ou otherOu = other.GetComponent<Ou>();
+                if (otherOu.owner != null && otherOu.owner != this) {
+                    Destroy(other.gameObject);
+                    Destroy(hatchlingHeld.gameObject);
+                    hatchlingHeld = null;
+                }
             }
 
             if (other.gameObject.layer == houseLayer) {
