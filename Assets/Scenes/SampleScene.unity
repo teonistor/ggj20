@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657785, g: 0.49641395, b: 0.5748159, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657785, g: 0.49641412, b: 0.5748162, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4084,45 +4084,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927349, guid: 1c0a0aa89582747e6970ef8ab4271008,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927349, guid: 1c0a0aa89582747e6970ef8ab4271008,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927352, guid: 1c0a0aa89582747e6970ef8ab4271008,
-        type: 3}
-      propertyPath: m_Offset.y
-      value: -0.024713516
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927352, guid: 1c0a0aa89582747e6970ef8ab4271008,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 3.3269997
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927352, guid: 1c0a0aa89582747e6970ef8ab4271008,
-        type: 3}
-      propertyPath: m_Offset.x
-      value: -0.2409668
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927352, guid: 1c0a0aa89582747e6970ef8ab4271008,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 1.6697807
-      objectReference: {fileID: 0}
     - target: {fileID: 550686747446927353, guid: 1c0a0aa89582747e6970ef8ab4271008,
         type: 3}
       propertyPath: m_Name
       value: Bluebird
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927355, guid: 1c0a0aa89582747e6970ef8ab4271008,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c0a0aa89582747e6970ef8ab4271008, type: 3}
@@ -4399,36 +4364,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927349, guid: 56a80347202c3425b9efa627a29e1f18,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927349, guid: 56a80347202c3425b9efa627a29e1f18,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927352, guid: 56a80347202c3425b9efa627a29e1f18,
-        type: 3}
-      propertyPath: m_Offset.y
-      value: -0.022844613
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927352, guid: 56a80347202c3425b9efa627a29e1f18,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 3.3324733
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927352, guid: 56a80347202c3425b9efa627a29e1f18,
-        type: 3}
-      propertyPath: m_Offset.x
-      value: 0.2741319
-      objectReference: {fileID: 0}
-    - target: {fileID: 550686747446927352, guid: 56a80347202c3425b9efa627a29e1f18,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 1.6298993
       objectReference: {fileID: 0}
     - target: {fileID: 550686747446927353, guid: 56a80347202c3425b9efa627a29e1f18,
         type: 3}
